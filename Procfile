@@ -1,0 +1,1 @@
+web: gunicorn entrena_server.wsgi --log-file -
