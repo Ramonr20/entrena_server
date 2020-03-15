@@ -1,0 +1,33 @@
+{% extends '../base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="col-6">
+        <h2>Nodos</h2>
+        
+        <form class="form" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Agregar" class="btn btn-primary">
+        </form>
+
+        <table class="table mt-5">
+            <thead class="bg-info">
+                <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Tipo de nodo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for node in node_list %}
+                    <tr>
+                        <td>{{ node.id }}</td>
+                        <td>{{ node.tipo_nodo }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends '../base.html' %}
+
+<!-- {% load crispy_forms_tags %} -->
+
+{% block content %}
+
+    <div class="col-6">
+        <h2>{{ room }} - Nodos</h2>
+        
+        <form class="form" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Agregar" class="btn btn-primary">
+        </form>
+
+        <table class="table mt-5">
+            <thead class="bg-info">
+                <tr>
+                    {% for field in fields %}
+                        {% if field != "room" %}
+                            <th scope="col">{{ field }}</th>
+                        {% endif %}
+                    {% endfor %}
+                    <th>Ver</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for node in room_node_list %}
+                    <tr>
+                        <td>{{ node.id }}</td>
+                        <td>{{ node.node }}</td>
+                        <td><a href="{% url 'vistas:lista_reg_node' room.id node.id %}">Registros</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

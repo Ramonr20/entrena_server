@@ -1,0 +1,37 @@
+{% extends '../base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="col-6">
+        <h2>Habitaciones</h2>
+    
+        <form class="form" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Agregar" class="btn btn-primary">
+        </form>
+
+        <table class="table mt-5">
+            <thead class="bg-info">
+                <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre de habitación</th>
+                        <th scope="col">Ver</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for room in room_list %}
+                    <tr>
+                        <td>{{ room.id }}</td>
+                        <td>{{ room.nombre_hab }}</td>
+                        <td><a href="{% url 'vistas:lista_room_node' room.id %}">Nodos</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}

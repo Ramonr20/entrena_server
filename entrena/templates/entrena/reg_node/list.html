@@ -1,0 +1,42 @@
+{% extends '../base.html' %}
+
+<!-- {% load crispy_forms_tags %} -->
+
+{% block content %}
+
+    <div class="col-12">
+        <h2>{{ room }} - {{ node.node }} ({{ node.id }}) - Registros</h2>
+        
+        <!-- <form class="form" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Agregar" class="btn btn-primary">
+        </form> -->
+
+        <table class="table mt-5">
+            <thead class="bg-info">
+                <tr>
+                    {% for field in fields %}
+                        {% if field != "Estado" and field != "room node" %}
+                            <th scope="col">{{ field }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for node in object_list %}
+                    <tr>
+                        <td>{{ node.id }}</td>
+                        <td>{{ node.voltaje }}</td>
+                        <td>{{ node.corriente }}</td>
+                        <td>{{ node.fac_de_pot }}</td>
+                        <td>{{ node.pot_activa }}</td>
+                        <td>{{ node.pot_real }}</td>
+                        <td>{{ node.pot_aparente }}</td>
+                        <td>{{ node.date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
