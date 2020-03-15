@@ -1,1 +1,1 @@
-web: gunicorn entrena_server.wsgi --log-file -
+web: gunicorn entrena_server.wsgi
