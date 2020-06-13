@@ -1,42 +1,141 @@
 {% extends '../base.html' %}
 
-<!-- {% load crispy_forms_tags %} -->
+<script>
+{% block jquery %}
+
+var endpoint = '/api/v1/sensores/' + "{{node.id}}" + "/all";
+
+// datos
+var voltajes = [];
+var corrientes = [];
+var fac_de_pots = [];
+var pot_activa = [];
+var pot_real = [];
+var pot_aparente = [];
+var dates = [];
+
+$.ajax({
+    method: "GET",
+    url: endpoint,
+    headers: {
+        'Authorization': 'Token 7de42a81f4e099395c274698e40fb6b6171070d6'
+    },
+    success: function(data) {
+        voltajes = data.voltaje
+        corrientes = data.corriente
+        fac_de_pots = data.fac_de_pot
+        pot_activa = data.pot_activa
+        pot_real = data.pot_real
+        pot_aparente = data.pot_aparente
+        dates = data.date
+        setChart()
+    },
+    error: function(error_data) {
+        console.log(error_data)
+    }
+});
+
+function setChart(){
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'voltaje',
+                fill: false,
+                backgroundColor: 'rgba(255, 0, 0, 1)',
+                data: voltajes,
+                borderColor: [
+                    'rgba(255, 0, 0, 1)',
+                ]
+            },
+            {
+                label: 'corriente',
+                fill: false,
+                backgroundColor: 'rgba(0, 0, 255, 1)',
+                data: corrientes,
+                borderColor: [
+                    'rgba(0, 0, 255, 1)',
+                ]
+            },
+            {
+                label: 'fac. de pot.',
+                fill: false,
+                backgroundColor: 'rgba(150, 150, 150, 1)',
+                data: fac_de_pots,
+                borderColor: [
+                    'rgba(150, 150, 150, 1)',
+                ]
+            },
+            {
+                label: 'pot. activa',
+                fill: false,
+                backgroundColor: 'rgba(100, 0, 100, 1)',
+                data: pot_activa,
+                borderColor: [
+                    'rgba(100, 0, 100, 1)',
+                ]
+            },
+            {
+                label: 'pot. real',
+                fill: false,
+                backgroundColor: 'rgba(255, 20, 100, 1)',
+                data: pot_real,
+                borderColor: [
+                    'rgba(255, 20, 100, 1)',
+                ]
+            },
+            {
+                label: 'pot. aparente',
+                fill: false,
+                backgroundColor: 'rgba(80, 80, 80, 1)',
+                data: pot_aparente,
+                borderColor: [
+                    'rgba(80, 80, 80, 1)',
+                ]
+            }]            
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Registros'
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: false,
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'values'
+                    },
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+// ************************************************************************
+
+{% endblock %}
+</script>
 
 {% block content %}
 
     <div class="col-12">
         <h2>{{ room }} - {{ node.node }} ({{ node.id }}) - Registros</h2>
-        
-        <!-- <form class="form" method="POST">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <input type="submit" value="Agregar" class="btn btn-primary">
-        </form> -->
 
-        <table class="table mt-5">
-            <thead class="bg-info">
-                <tr>
-                    {% for field in fields %}
-                        {% if field != "Estado" and field != "room node" %}
-                            <th scope="col">{{ field }}</th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for node in object_list %}
-                    <tr>
-                        <td>{{ node.id }}</td>
-                        <td>{{ node.voltaje }}</td>
-                        <td>{{ node.corriente }}</td>
-                        <td>{{ node.fac_de_pot }}</td>
-                        <td>{{ node.pot_activa }}</td>
-                        <td>{{ node.pot_real }}</td>
-                        <td>{{ node.pot_aparente }}</td>
-                        <td>{{ node.date }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <canvas id="myChart" width="400" height="190" class="chartjs-render-monitor"></canvas>
+
     </div>
+
 {% endblock %}
